@@ -1,36 +1,28 @@
+#include "pch.h"
 
 #pragma warning(disable: 4996)
 #include <iostream>
-#include <cstring>
-
 
 #include "Passanger.h"
 
 using namespace std;
 
-
-Passanger::Passanger( char* name) : Person(name)
+Passanger::Passanger(char* name, const Ticket* ticket) : Person(name)
 {
-
+	this->ticket = ticket;
 }
 
-
-Passanger::Passanger(const Passanger& other) : Person(other.get_name()) 
-{
-	this->ticket = other.get_ticket();
-}
-
-const Ticket&  Passanger::get_ticket() const
+const Ticket* Passanger::get_ticket() const
 {
 	return this->ticket;
 }
 
-
 void Passanger::show() const
 {
-	cout << "Name: " << this->get_name() << "ticket:" << this->get_ticket() << ".\n";
+	cout << *this << endl;
 }
 
-
-
-
+std::ostream & operator<<(std::ostream & os, const Passanger & passanger)
+{
+	return os << "Name: " << passanger.get_name() << "ticket:" << passanger.get_ticket();
+}

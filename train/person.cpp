@@ -1,10 +1,11 @@
+#include "pch.h"
+
 #pragma warning(disable: 4996)
 #include <iostream>
-#include <cstring>
-
-using namespace std;
 
 #include "person.h"
+
+using namespace std;
 
 Person::~Person()
 {
@@ -17,15 +18,6 @@ Person::Person(const char* name)
 	strcpy(this->name, name);
 	
 }
-
-Person::Person(const Person& other)
-{
-	delete[] this->name;
-	this->name = new char[strlen(other.name) + 1];
-	strcpy(this->name, other.name);
-
-}
-
 
 void Person::show() const
 {
@@ -43,6 +35,3 @@ void Person::set_name(const char* newName)
 	name = new char[strlen(newName) + 1];
 	strcpy(name, newName);
 }
-
- 
-

@@ -1,60 +1,49 @@
+#include "pch.h"
+
 #pragma warning(disable: 4996)
 #include <iostream>
 #include <cstring>
+
 #include "Station.h"
+
 using namespace std;
 
-Station:: ~Station()
+Station::~Station()
 {
-	delete [] platfroms;
+	for (int i = 0; i < NUM_OF_CITIES - 1; i++) {
+		delete platfroms[i];
+	}
 }
 
-Station::Station(const enum City city)
+Station::Station(City city)
 {
 	this->city = city;
-	this->coordinate_X = City_Coordinates[city][0];
-	this->coordinate_Y = City_Coordinates[city][1];
+	coordinate_X = City_Coordinates[city][0];
+	coordinate_Y = City_Coordinates[city][1];
 
-	for (int i = 0; i < PLATFORM_COUNT; i++)
+	for (int i = 0; i < NUM_OF_CITIES - 1;)
 	{
-		this->platfroms[i] = new Platform(i); 
+		if (city != i) {
+			platfroms[i] = new Platform(i);
+			++i;
+		}
 	}
 }
 
-
-Station::Station(const Station& other)
+City Station::get_city() const
 {
-	this->city = other.get_city();
-	this->coordinate_X = other.get_coordinate_X;
-	this->coordinate_Y = other.coordinate_Y;
-
-	delete[] platfroms;
-
-	for (int i = 0; i < PLATFORM_COUNT; i++)
-	{
-		this->platfroms[i] = new Platform(other.get_platform(i).get_platform_number());
-	}
-}
-
-Station:: ~Station()
-{
-	delete[] platfroms;
-}
-
-const enum City Station::get_city() const
-{
-	return this->city;
+	return city;
 }
 
 int Station::get_coordinate_X() const
 {
-	return this->coordinate_X;
-}
-int Station::get_coordinate_Y() const
-{
-	return this->coordinate_Y;
+	return coordinate_X;
 }
 
+int Station::get_coordinate_Y() const
+{
+	return coordinate_Y;
+}
 
 void Station::set_coordinates(int x, int y)
 {
@@ -65,59 +54,46 @@ void Station::set_coordinates(int x, int y)
 bool Station::platforms_are_available() const
 {
 
-	for (int i = 0; i < PLATFORM_COUNT; i++)  
+	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
 	{
-		if (this->platfroms[i]->is_occupied)
+		if (this->platfroms[i]->is_occupied())
 			return false;
 	}
 	return true;
 }
 
-Platform& Station::get_platform(int platform_number) const
+const Platform& Station::get_platform(int platform_number) const
 {
-	return *this->platfroms[platform_number]; //error check
-}
-
-
-Platform& Station::select_platform() const 
-{
-	int action = -1;
-	std::cin >> action; //error check
-
-	return this->get_platform(action);
-}
-
-void Station::show() 
-{
-	cout << "Station of: " << this->get_city() << "coordinate:" << "("<<this->get_coordinate_X()<<","<<this->get_coordinate_Y()<<")"  << ".\n";
-	for (int i = 0; i < 5; i++)
+	if (platform_number < 0 || platform_number >= NUM_OF_CITIES)
 	{
-		cout << "platform" << i  << (this->get_platform(i).is_occupied()  ? " is occupied:" : "is available:")  << ".\n";
+		throw "Index out of bound";
 	}
+	return *this->platfroms[platform_number];
+}
 
+void Station::show() const
+{
+	cout << "Station of: " << this->get_city() << "coordinate:" << "("<<this->get_coordinate_X()<<","<<this->get_coordinate_Y()<<")"  << endl;
+	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+	{
+		cout << "platform " << i << ": " << platfroms[i] << endl;
+	}
 }
 
 bool Station::operator!=(const Station& other) const
 {
-	if (this->city == other.get_city())
-		return false;
-	else if (this->coordinate_X == other.get_coordinate_X())
-		return false;
-	else if (this->coordinate_Y == other.get_coordinate_Y())
-		return false;
-
-	return true;
+	return !(*this == other);
 }
 
 bool Station:: operator==(const Station& other) const
 {
-	return  !(*this != other);
+	return 
+		get_city() == other.get_city() && 
+		get_coordinate_X() == other.get_coordinate_X() &&
+		get_coordinate_Y() == other.get_coordinate_Y();
 }
 
-
-int& Station:: operator[](int index) const // what can we return ?
+const Platform& Station::operator[](int index) const
 {
-	
+	return get_platform(index);
 }
-
-

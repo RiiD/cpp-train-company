@@ -2,16 +2,16 @@
 #define __DRIVER_H
 
 #include <iostream>
+
 #include "Person.h"
 
-class Driver : virtual public Person
+class Driver : public Person
 {
 private:
 	Driver(const Driver& other); 
 
 public:
 	Driver(const char* name);
-	~Driver();
 
 	virtual void show() const;
 	friend std::ostream& operator<<(std::ostream& os, const Driver& driver);

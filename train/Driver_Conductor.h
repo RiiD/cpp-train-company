@@ -2,6 +2,7 @@
 #define __DRIVER_CONDUCTOR_H
 
 #include <iostream>
+
 #include "Driver.h"
 #include "Conductor.h"
 
@@ -12,11 +13,11 @@ private:
 
 public:
 	Driver_Conductor(const char* name);
-	~Driver_Conductor();
+
+	const char* get_name() const;
 
 	virtual void show() const override;
 	friend std::ostream& operator<<(std::ostream& os, const Driver_Conductor& driver_conductor);
-
 };
 
 #endif

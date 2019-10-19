@@ -1,18 +1,15 @@
 #ifndef __PERSON_H
 #define __PERSON_H
 
-
-
-
 class Person
 {
 private:
 	char* name;
-	Person(const Person& person);
+	Person(const Person& other);
 
 public:
 	Person(const char* name);
-	~Person();
+	virtual ~Person();
 
 	virtual void show() const;
 

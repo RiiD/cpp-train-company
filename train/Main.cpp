@@ -7,6 +7,7 @@
 #include "Train_Company.h"
 #include "Driver_Conductor.h"
 #include "CancelledException.h"
+#include "MyLinkedList.h"
 
 enum actions { NONE, CREATE_TRAIN, MODIFY_TRAIN, DECOMISSION_TRAIN, BOARD_DISEMBARK_PASSANGERS, BOARD_DISEMBARK_CREW, TRAIN_RUN, SHOW_TRAINS, SHOW_TRAINS_COMPANY, QUIT };
 
@@ -23,9 +24,16 @@ void show_trains(const Train_Company& train_company);
 void show_train_company(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
+void test_linked_list();
 
 void main()
 {
+	//char a;
+	//test_linked_list();
+
+	//cin >> a;
+	//return;
+
 	int action = -1;
 	int number_of_trains = 0;
 
@@ -175,7 +183,7 @@ void modify_train(Train_Company& train_company)
 			}
 		} while (true);
 	}
-	catch (CancelledException& e)
+	catch (CancelledException&)
 	{
 		std::cout << "Cancelled" << endl;
 	}
@@ -189,7 +197,7 @@ void decomission_train(Train_Company& train_company)
 		Train* selected_train = train_company.select_train();
 		train_company.decomission_train(selected_train);
 	}
-	catch (CancelledException& e)
+	catch (CancelledException&)
 	{
 		std::cout << "Cancelled" << endl;
 	}
@@ -250,7 +258,7 @@ void board_disembark_passangers(Train_Company& train_company)
 			}
 		}
 	}
-	catch (CancelledException& e)
+	catch (CancelledException&)
 	{
 		std::cout << "Cancelled" << endl;
 	}
@@ -323,7 +331,7 @@ void board_disembark_crew(Train_Company& train_company)
 			}
 		}
 	}
-	catch (CancelledException& e)
+	catch (CancelledException&)
 	{
 		std::cout << "Cancelled" << endl;
 	}
@@ -362,7 +370,7 @@ void train_run(Train_Company& train_company)
 		selected_train->set_platform(platform);
 		selected_train->remove_all_passangers();
 	}
-	catch (CancelledException& e)
+	catch (CancelledException&)
 	{
 		std::cout << "Cancelled" << endl;
 	}
@@ -381,4 +389,14 @@ void show_trains(const Train_Company& train_company)
 void show_train_company(const Train_Company& train_company)
 {
 	train_company.show();
+}
+
+void test_linked_list()
+{
+	int action = -1;
+	MyLinkedList<string> l;
+	l.append("Hello");
+	l.append("2");
+	cout << l;
+	cin >> action;
 }

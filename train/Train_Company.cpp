@@ -5,6 +5,7 @@
 #include <cstring>
 
 #include "Train_Company.h"
+#include "CancelledException.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ Train_Company::~Train_Company()
 	}
 }
 
-const Station* Train_Company::get_station(City city) const
+Station* Train_Company::get_station(City city) const
 {
 	for (int i = 0; i < number_of_stations; i++) 
 	{
@@ -37,11 +38,11 @@ const Station* Train_Company::get_station(City city) const
 	return nullptr;
 }
 
-const Train * Train_Company::get_train(int index) const
+const Train* Train_Company::get_train(int index) const
 {
 	if (index < 0 || index >= number_of_trains)
 	{
-		throw "Index out of bounds";
+		throw CancelledException();
 	}
 	return trains[index];
 }
@@ -74,23 +75,74 @@ void Train_Company::show() const
 
 	for (int i = 0; i < number_of_stations; i++)
 	{
-		cout << "\t" << i << ". " << stations[i] << endl;
+		cout << i << ". " << *stations[i] << endl;
 	}
 
 	cout << "Trains:" << endl;
 	for (int i = 0; i < number_of_trains; i++)
 	{
-		cout << "\t" << i << ". " << trains[i] << endl;
+		cout << i << ". " << *trains[i] << endl;
 	}
 
 	cout << "Employees:" << endl;
 	for (int i = 0; i < number_of_employees; i++)
 	{
-		cout << "\t" << i << ". " << employees[i] << endl;
+		cout << i << ". " << employees[i] << endl;
 	}
 }
 
-void Train_Company::operator+=(const Station & station)
+void Train_Company::operator+=(Station & station)
 {
 	stations[number_of_stations++] = &station;
+}
+
+Train * Train_Company::operator+=(Train& train)
+{
+	Train* company_train = new Train(train);
+	trains[number_of_trains++] = company_train;
+	return company_train;
+}
+
+Station* Train_Company::select_station() const
+{
+	int selection;
+	do
+	{
+		for (int i = 0; i < number_of_stations; i++)
+		{
+			cout << i + 1 << ". " << stations[i] << endl;
+		}
+
+		cout << ": ";
+		cin >> selection;
+	} while (selection < 0 || selection > number_of_stations);
+
+	if (selection == 0)
+	{
+		throw CancelledException();
+	}
+
+	return stations[selection - 1];
+}
+
+Train* Train_Company::select_train() const
+{
+	int selection;
+	do
+	{
+		for (int i = 0; i < number_of_trains; i++)
+		{
+			cout << i + 1 << ". " << trains[i] << endl;
+		}
+
+		cout << ": ";
+		cin >> selection;
+	} while (selection < 0 || selection > number_of_trains);
+
+	if (selection == 0)
+	{
+		throw CancelledException();
+	}
+
+	return trains[selection - 1];
 }

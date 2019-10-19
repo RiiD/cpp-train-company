@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CancelledException.h" />
     <ClInclude Include="Carriage.h" />
     <ClInclude Include="Conductor.h" />
     <ClInclude Include="Driver.h" />

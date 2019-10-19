@@ -7,9 +7,13 @@
 
 using namespace std;
 
-Passanger::Passanger(char* name, const Ticket* ticket) : Person(name)
+Passanger::Passanger(char* name) : Person(name)
 {
-	this->ticket = ticket;
+}
+
+Passanger::Passanger(const Passanger& other) : Person(other.get_name())
+{
+	ticket = other.ticket;
 }
 
 const Ticket* Passanger::get_ticket() const
@@ -19,10 +23,15 @@ const Ticket* Passanger::get_ticket() const
 
 void Passanger::show() const
 {
-	cout << *this << endl;
+	cout << this << endl;
 }
 
-std::ostream & operator<<(std::ostream & os, const Passanger & passanger)
+ostream& Passanger::dynamic_ostream(ostream & os, const Person* person) const
 {
-	return os << "Name: " << passanger.get_name() << "ticket:" << passanger.get_ticket();
+	return os << "Passanger: name=" << person->get_name();
+}
+
+Person* Passanger::clone() const
+{
+	return new Passanger(*this);
 }

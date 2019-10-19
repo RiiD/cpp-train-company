@@ -12,15 +12,16 @@ class Passanger : public Person
 {
 private:
 	const Ticket* ticket;
-	Passanger(const Passanger& passanger);
 
 public:
-	Passanger(char* name, const Ticket* ticket);
+	Passanger(char* name);
+	Passanger(const Passanger& other);
 
 	const Ticket* get_ticket() const;
 
 	virtual void show() const;
-	friend std::ostream& operator<<(std::ostream& os, const Passanger& passanger);
+	virtual ostream& dynamic_ostream(ostream& os, const Person* person) const override;
+	virtual Person* clone() const override;
 };
 
 #endif

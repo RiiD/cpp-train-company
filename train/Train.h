@@ -33,10 +33,9 @@ private:
 	const Person* crew_members[MAX_NUMBER_OF_CREW_MEMBERS];
 	const Passanger* passangers[MAX_NUMBER_OF_PASSENGERS];
 
-	Train(const Train& train);
-
 public:
-	Train(const Station* station); 
+	Train(const Station* station);
+	Train(const Train& train);
 	~Train();
 
 	//regular functions:
@@ -54,17 +53,17 @@ public:
 	void add_carriage(Carriage::Type type);
 	void remove_carriage(Carriage::Type type);
 
-	void add_crew_member(const Person* person);
-	void remove_crew_member(const Person* person);
+	void add_crew_member(const Person& person);
+	void remove_crew_member(const Person& person);
 
-	void add_passanger(const Passanger* passanger);
-	void remove_passanger(const Passanger* passanger);
+	void add_passanger(const Passanger& passanger);
+	void remove_passanger(const Passanger& passanger);
 
 	void remove_all_passangers();
 
 	bool can_passanger_board() const;
 	bool has_passangers_onboard() const;
-	bool is_passanger_onboard(const Passanger* passenger) const;
+	bool is_passanger_onboard(const Passanger& passenger) const;
 	bool are_there_drivers() const;
 	bool is_there_conductor() const;
 	bool is_there_engine() const;
@@ -78,14 +77,14 @@ public:
 
 	const Train& operator=(const Train& other);
 	
-	const Train& operator+(const Carriage* carriage);		
-	const Train& operator-(const Carriage* carriage);	
+	const Train& operator+=(const Carriage& carriage);		
+	const Train& operator-=(const Carriage& carriage);
 	
-	const Train& operator+(const Person* crewmember);
-	const Train& operator-(const Person* crewmember);
+	const Train& operator+=(const Person& crewmember);
+	const Train& operator-=(const Person& crewmember);
 	
-	const Train& operator+(const Passanger* passanger);		
-	const Train& operator-(const Passanger* passanger);		
+	const Train& operator+=(const Passanger& passanger);
+	const Train& operator-=(const Passanger& passanger);
 };
 
 #endif

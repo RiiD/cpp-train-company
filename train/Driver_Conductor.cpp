@@ -8,22 +8,26 @@
 
 using namespace std;
 
-Driver_Conductor::Driver_Conductor(const char* name) : Driver(name), Conductor(name)
+Driver_Conductor::Driver_Conductor(const char* name) : Driver(name), Conductor(name), Person(name)
+{
+}
+
+Driver_Conductor::Driver_Conductor(const Driver_Conductor& other) : Driver(other), Conductor(other), Person(other)
 {
 }
 
 void Driver_Conductor::show() const
 {
-	cout << "Driver_Conductor name is:" << this->get_name() << ".\n";
+	cout << this << endl;
 
 }
 
-std::ostream& operator<<(std::ostream& os, const Driver_Conductor& driver_conductor)
+ostream & Driver_Conductor::dynamic_ostream(ostream & os, const Person * person) const
 {
-	return os << "Driver_Conductor name is:" << driver_conductor.get_name();
+	return os << "Driver_Conductor: name=" << person->get_name();
 }
 
-const char* Driver_Conductor::get_name() const 
+Person* Driver_Conductor::clone() const
 {
-	return Driver::get_name();
+	return new Driver_Conductor(*this);
 }

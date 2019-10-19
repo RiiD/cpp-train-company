@@ -11,13 +11,22 @@ Conductor::Conductor(const char* name): Person(name)
 {
 }
 
+Conductor::Conductor(const Conductor& other) : Person(other)
+{
+}
+
 void  Conductor::show() const
 {
-	cout << *this << endl;
+	cout << this << endl;
 
 }
 
-std::ostream& operator<<(std::ostream& os, const Conductor& conductor)
+Person* Conductor::clone() const
 {
-	return os << "Conductor name is:" << conductor.get_name();
+	return new Conductor(*this);
+}
+
+ostream & Conductor::dynamic_ostream(ostream& os, const Person* person) const
+{
+	return os << "Conductor name is:" << person->get_name();
 }

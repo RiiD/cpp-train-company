@@ -11,12 +11,21 @@ Driver::Driver(const char* name) : Person(name)
 {
 }
 
-void  Driver::show() const
+Driver::Driver(const Driver & other) : Person(other)
 {
-	cout << *this << endl;
 }
 
-std::ostream& operator<<(std::ostream& os, const Driver& Driver)
+void  Driver::show() const
 {
-	return os << "Driver name is:" << Driver.get_name();
+	cout << this << endl;
+}
+
+ostream & Driver::dynamic_ostream(ostream & os, const Person* person) const
+{
+	return os << "Driver: name=" << person->get_name();
+}
+
+Person* Driver::clone() const
+{
+	return new Driver(*this);
 }

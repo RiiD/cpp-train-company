@@ -9,7 +9,7 @@ constexpr int MAX_NUMBER_OF_EMPLOYEES = 25 * (2 + 1);
 class Train_Company
 {
 private:
-	const Station* stations[NUM_OF_CITIES];
+	Station* stations[NUM_OF_CITIES];
 	Train* trains[MAX_NUMBER_OF_TRAINS];
 	Person* employees[MAX_NUMBER_OF_EMPLOYEES];
 
@@ -24,14 +24,19 @@ public:
 
 	//regular functions:
 
-	const Station* get_station(City city) const;
+	Station* get_station(City city) const;
 	
 	const Train* get_train(int index) const;
 	int get_number_of_trains() const;
+
 	void decomission_train(Train* train);
 	void show() const;
 
-	void operator += (const Station& station);
+	void operator += (Station& station);
+	Train* operator += (Train& train);
+
+	Station* select_station() const;
+	Train* select_train() const;
 };
 
 #endif

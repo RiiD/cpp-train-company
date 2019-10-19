@@ -44,16 +44,21 @@ void Platform::show() const
 
 std::ostream& operator<<(std::ostream& os, const Platform& platform)
 {
-	return os << "platform" << platform.get_platform_number() << (platform.is_occupied() ? "is occupied" : "is not occupied");
+	return os << &platform;
 }
 
-const Platform& Platform::operator+(const Train& train)
+std::ostream & operator<<(std::ostream & os, const Platform * platform)
 {
-	this->set_train(&train);
+	return os << "platform " << platform->get_platform_number() << (platform->is_occupied() ? " is occupied" : " is not occupied");
+}
+
+const Platform& Platform::operator+=(const Train* train)
+{
+	this->set_train(train);
 	return *this;
 }
 
-const Platform& Platform::operator-(const Train& train)
+const Platform& Platform::operator-=(const Train* train)
 {
 	this->remove_train();
 	return *this;

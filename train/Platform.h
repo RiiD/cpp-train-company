@@ -26,8 +26,9 @@ public:
 	void show() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Platform& platform);
-	const Platform& operator+(const Train& train);
-	const Platform& operator-(const Train& train);
+	friend std::ostream& operator<<(std::ostream& os, const Platform* platform);
+	const Platform& operator+=(const Train* train);
+	const Platform& operator-=(const Train* train);
 };
 
 #endif

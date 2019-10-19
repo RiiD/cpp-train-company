@@ -8,16 +8,13 @@
 
 class Driver_Conductor : public Driver, public Conductor
 {
-private:
-	Driver_Conductor(const Driver_Conductor& driver_conductor);
-
 public:
 	Driver_Conductor(const char* name);
-
-	const char* get_name() const;
+	Driver_Conductor(const Driver_Conductor& other);
 
 	virtual void show() const override;
-	friend std::ostream& operator<<(std::ostream& os, const Driver_Conductor& driver_conductor);
+	virtual ostream& dynamic_ostream(ostream& os, const Person* person) const override;
+	virtual Person* clone() const override;
 };
 
 #endif

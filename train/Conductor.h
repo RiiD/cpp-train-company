@@ -5,16 +5,15 @@
 
 #include "Person.h"
 
-class Conductor : public Person
+class Conductor : virtual public Person
 {
-private:
-	Conductor(const Conductor& conductor);
-
 public:
 	Conductor(const char* name);
+	Conductor(const Conductor& other);
 
 	virtual void show() const;
-	friend std::ostream& operator<<(std::ostream& os, const Conductor& conductor);
+	virtual Person* clone() const override;
+	virtual ostream& dynamic_ostream(ostream& os, const Person* person) const override;
 };
 
 #endif

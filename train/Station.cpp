@@ -11,7 +11,7 @@ using namespace std;
 Station::~Station()
 {
 	for (int i = 0; i < NUM_OF_CITIES - 1; i++) {
-		delete platfroms[i];
+		delete platforms[i];
 	}
 }
 
@@ -21,11 +21,11 @@ Station::Station(City city)
 	coordinate_X = City_Coordinates[city][0];
 	coordinate_Y = City_Coordinates[city][1];
 
-	for (int i = 0; i < NUM_OF_CITIES - 1;)
+	for (int c = 0, p = 0; c < NUM_OF_CITIES, p < NUM_OF_CITIES - 1; c++)
 	{
-		if (city != i) {
-			platfroms[i] = new Platform(i);
-			++i;
+		if (city != c) {
+			platforms[p] = new Platform(c);
+			++p;
 		}
 	}
 }
@@ -56,19 +56,19 @@ bool Station::platforms_are_available() const
 
 	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
 	{
-		if (this->platfroms[i]->is_occupied())
+		if (this->platforms[i]->is_occupied())
 			return false;
 	}
 	return true;
 }
 
-const Platform& Station::get_platform(int platform_number) const
+Platform& Station::get_platform(int platform_number) const
 {
 	if (platform_number < 0 || platform_number >= NUM_OF_CITIES)
 	{
 		throw "Index out of bound";
 	}
-	return *this->platfroms[platform_number];
+	return *this->platforms[platform_number];
 }
 
 void Station::show() const
@@ -76,7 +76,7 @@ void Station::show() const
 	cout << "Station of: " << this->get_city() << "coordinate:" << "("<<this->get_coordinate_X()<<","<<this->get_coordinate_Y()<<")"  << endl;
 	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
 	{
-		cout << "platform " << i << ": " << platfroms[i] << endl;
+		cout << "platform " << i << ": " << platforms[i] << endl;
 	}
 }
 
@@ -93,7 +93,48 @@ bool Station:: operator==(const Station& other) const
 		get_coordinate_Y() == other.get_coordinate_Y();
 }
 
-const Platform& Station::operator[](int index) const
+Platform& Station::operator[](int index) const
 {
 	return get_platform(index);
+}
+
+Platform * Station::select_platform() const
+{
+	int selection;
+	do
+	{
+		for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+		{
+			cout << i + 1 << ". " << platforms[i] << endl;
+		}
+
+		cout << ": ";
+		cin >> selection;
+	} while (selection < 0 || selection >  NUM_OF_CITIES - 1);
+
+	if (selection == 0) 
+	{
+		throw "canceled";
+	}
+
+	return platforms[selection - 1];
+}
+
+std::ostream & operator<<(std::ostream & os, const Station& station)
+{
+	return os << &station;
+}
+
+std::ostream & operator<<(std::ostream & os, const Station* station)
+{
+	char* cityName = City_Name[station->get_city()];
+	os
+		<< "Station of: " << cityName << endl
+		<< "Coordinate:" << "(" << station->get_coordinate_X() << "," << station->get_coordinate_Y() << ")" << endl;
+
+	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+	{
+		os << "platform " << i << ": " << station->platforms[i] << endl;
+	}
+	return os;
 }

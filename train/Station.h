@@ -16,7 +16,7 @@ private:
 	City city;
 	int coordinate_X;
 	int coordinate_Y;
-	Platform* platfroms[City::Rome];
+	Platform* platforms[NUM_OF_CITIES - 1];
 	Station(const Station& station);
 
 public:
@@ -30,13 +30,18 @@ public:
 	void set_coordinates(int x, int y);
 	
 	bool platforms_are_available() const;
-	const Platform& get_platform(int platform_number) const;
+	Platform& get_platform(int platform_number) const;
 
 	void show() const;
 
 	bool operator!=(const Station& other) const;
 	bool operator==(const Station& other) const;
-	const Platform& operator[](int index) const;
+	Platform& operator[](int index) const;
+
+	Platform* select_platform() const;
+
+	friend std::ostream& operator<<(std::ostream& os, const Station& platform);
+	friend std::ostream& operator<<(std::ostream& os, const Station* platform);
 };
 
 #endif

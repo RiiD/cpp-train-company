@@ -13,11 +13,45 @@ Train::Train(const Station* station)
 	this->station = station;
 }
 
+Train::Train(const Train& other)
+{
+	number_of_passangers = other.number_of_passangers;
+	number_of_carriages = other.number_of_carriages;
+	number_of_crew_members = other.number_of_crew_members;
+
+	station = other.station;
+
+	for (int i = 0; i < number_of_crew_members; i++)
+	{
+		crew_members[i] = other.crew_members[i]->clone();
+	}
+
+	for (int i = 0; i < number_of_passangers; i++)
+	{
+		passangers[i] = new Passanger(*other.passangers[i]);
+	}
+
+	for (int i = 0; i < number_of_carriages; i++)
+	{
+		carriages[i] = new Carriage(other.carriages[i]->get_carriage_type());
+	}
+}
+
 Train:: ~Train()
 {
 	for (int i = 0; i < number_of_carriages; i++)
 	{
 		delete carriages[i];
+	}
+
+	for (int i = 0; i < number_of_passangers; i++)
+	{
+		delete passangers[i];
+	}
+
+	for (int i = 0; i < number_of_crew_members; i++)
+	{
+		delete crew_members[i];
 	}
 }
 
@@ -101,19 +135,19 @@ void Train::remove_carriage(Carriage::Type type)
 	}
 }
 
-void Train::add_crew_member(const Person* person)
+void Train::add_crew_member(const Person& person)
 {
-	this->crew_members[number_of_crew_members] = person;
+	this->crew_members[number_of_crew_members] = person.clone();
 	number_of_crew_members++;
 }
 
-void Train::remove_crew_member(const Person* person)
+void Train::remove_crew_member(const Person& person)
 {
 	   int found = -1;
 
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
-			if (strcmp(this->crew_members[i]->get_name(), person->get_name()))
+			if (strcmp(crew_members[i]->get_name(), person.get_name()))
 			{
 				found = i;
 			}
@@ -121,30 +155,31 @@ void Train::remove_crew_member(const Person* person)
 	
 		if (found >= 0)
 		{
+			delete crew_members[found];
 			for (int i = found; i < number_of_crew_members - 1; ++i)
 			{
-				this->crew_members[i] = this->crew_members[i + 1];
+				crew_members[i] = crew_members[i + 1];
 			}
 			number_of_crew_members--;
 		}
 }
 
-void Train::add_passanger(const Passanger* passanger)
+void Train::add_passanger(const Passanger& passanger)
 {
 	if (!is_passanger_onboard(passanger))
 	{
-		this->passangers[number_of_passangers] = passanger;
+		this->passangers[number_of_passangers] = new Passanger(passanger);
 		number_of_passangers++;
 	}
 }
 
-void Train::remove_passanger(const Passanger* passanger)
+void Train::remove_passanger(const Passanger& passanger)
 {
 	int found = -1;
 
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (this->passangers[i] == passanger)
+		if (strcmp(passangers[i]->get_name(), passanger.get_name()))
 		{
 			found = i;
 		}
@@ -152,9 +187,10 @@ void Train::remove_passanger(const Passanger* passanger)
 
 	if (found > 0)
 	{
+		delete passangers[found];
 		for (int i = found; i < number_of_passangers - 1; ++i)
 		{
-			this->passangers[i] = passangers[i + 1];
+			passangers[i] = passangers[i + 1];
 		}
 		number_of_passangers--;
 	}
@@ -162,7 +198,13 @@ void Train::remove_passanger(const Passanger* passanger)
 
 void Train::remove_all_passangers()
 {
+	for (int i = 0; i < number_of_passangers; i++)
+	{
+		delete passangers[i];
+	}
+
 	number_of_passangers = 0;
+
 }
 
 bool Train::can_passanger_board() const
@@ -183,11 +225,11 @@ bool Train::has_passangers_onboard() const
 	return number_of_passangers > 0;
 }
 
-bool Train:: is_passanger_onboard(const Passanger* passenger) const
+bool Train:: is_passanger_onboard(const Passanger& passenger) const
 {
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (this->passangers[i] == passenger)
+		if (strcmp(this->passangers[i]->get_name(), passenger.get_name()))
 		{
 			return true;
 		}
@@ -216,7 +258,7 @@ bool Train:: are_there_drivers() const
 	return false;
 }
 
-bool Train:: is_there_conductor() const
+bool Train::is_there_conductor() const
 {
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
@@ -249,16 +291,23 @@ bool Train::can_train_depart() const
 	return is_there_engine() && is_there_conductor() && are_there_drivers();
 }
 
-const  Train& Train:: operator=(const Train& other)
+const  Train& Train::operator=(const Train& other)
 {
 	for (int i = 0; i < number_of_carriages; i++) {
 		delete carriages[i];
 	}
+
+	for (int i = 0; i < number_of_passangers; i++) {
+		delete passangers[i];
+	}
+
+	for (int i = 0; i < number_of_crew_members; i++) {
+		delete crew_members[i];
+	}
+
 	number_of_carriages = other.number_of_carriages;
 	number_of_crew_members = other.number_of_crew_members;
 	number_of_passangers = other.number_of_passangers;
-
-
 
 	for (int i = 0; i < number_of_carriages; i++) {
 		carriages[i] = new Carriage(other.carriages[i]->get_carriage_type());
@@ -266,12 +315,12 @@ const  Train& Train:: operator=(const Train& other)
 
 	for (int i = 0; i < number_of_crew_members; i++) 
 	{
-		crew_members[i] = other.crew_members[i];
+		crew_members[i] = other.crew_members[i]->clone();
 	}
 
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		passangers[i] = other.passangers[i];
+		passangers[i] = new Passanger(*other.passangers[i]);
 	}
 
 	station = other.station;
@@ -279,36 +328,36 @@ const  Train& Train:: operator=(const Train& other)
 	return *this;
 }
 
-const Train& Train::operator+(const Carriage* carriage)
+const Train& Train::operator+=(const Carriage& carriage)
 {
-	add_carriage(carriage->get_carriage_type());
+	add_carriage(carriage.get_carriage_type());
 	return *this;
 
 }
-const Train& Train::operator-(const Carriage* carriage)
+const Train& Train::operator-=(const Carriage& carriage)
 {
-	remove_carriage(carriage->get_carriage_type());
+	remove_carriage(carriage.get_carriage_type());
 	return *this;
 }
 
-const Train& Train:: operator+(const Person* crewmember)
+const Train& Train:: operator+=(const Person& crewmember)
 {
 	add_crew_member(crewmember);
 	return *this;
 }
 
-const Train& Train:: operator-(const Person* crewmember)
+const Train& Train:: operator-=(const Person& crewmember)
 {
 	remove_crew_member(crewmember);
 	return *this;
 }
 
-const Train& Train:: operator+(const Passanger* passanger)
+const Train& Train:: operator+=(const Passanger& passanger)
 {
 	add_passanger(passanger);
 	return *this;
 }
-const Train& Train:: operator-(const Passanger* passanger)
+const Train& Train:: operator-=(const Passanger& passanger)
 {
 	remove_passanger(passanger);
 	return *this;

@@ -8,33 +8,49 @@
 #include "Carriage.h"
 #include "Passanger.h"
 #include "Station.h"
+#include "Driver_Conductor.h"
+
+
 
 class Train
 {
 private:
+	int number_of_passangers = 0;
+	int number_of_carriages = 0;
+	int number_of_crew_members = 0;
+
 	Station* station;
-	Carriage* carriages[MAX_NUMBER_OF_CARRAIGES]; 
+	Carriage* carriages[MAX_NUMBER_OF_CARRAIGES];
 	Person* crew_members[MAX_NUMBER_OF_CREW_MEMBERS];
 	Passanger* passangers[];
+
+	
+
 
 public:
 	Train(const Station& station); 
 	Train(const Train& train);
+
 	~Train();
 
 	//regular functions:
 
 	Station* get_station() const;
 	void set_station(const Station* station);
-	Passanger* get_passanger(char* name);
+	 Passanger* get_passanger(char* name);
 	Person* get_crewmember(char* name);
 
-	void add_carriage(Carriage* carriage);
+	int get_number_of_crew_member() const;
+	int get_number_of_carriage() const;
+	int get_number_of_passangers() const;
+
+
+	void add_carriage(const Carriage* carriage);
 	void remove_carriage(Carriage_Type type);
-	void add_crew_member(Person* person);
-	void remove_crew_member(Person* person);
-	void add_passanger(Passanger* passanger);
-	void remove_passanger(Passanger* passanger);
+	void add_crew_member(const Person* person);
+	void remove_crew_member(const Person* person);
+	void add_passanger(const Passanger* passanger);
+	void remove_passanger(const Passanger* passanger);
 	void remove_all_passangers();
 
 	bool can_passanger_board() const;
@@ -44,6 +60,9 @@ public:
 	bool is_there_conductor() const;
 	bool is_there_engine() const;
 	bool can_train_depart() const;
+
+
+
 
 	void show() const;
 

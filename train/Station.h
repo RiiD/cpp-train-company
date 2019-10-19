@@ -13,7 +13,7 @@ private:
 	enum City city;
 	int coordinate_X;
 	int coordinate_Y;
-	Platform platfroms[5];
+	Platform * platfroms[PLATFORM_COUNT]; // was changed to pointer 
 	Station(const Station& station);
 
 public:
@@ -30,7 +30,7 @@ public:
 	Platform& get_platform(int platform_number) const;
 	Platform& select_platform() const;
 
-	void show();
+	void show() ;
 
 	bool operator!=(const Station& other) const;
 	bool operator==(const Station& other) const;

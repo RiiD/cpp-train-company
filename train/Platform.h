@@ -18,6 +18,7 @@ public:
 	~Platform();
 
 	int get_platform_number() const;
+	Train* get_train_in_platform() const; // was added by efi 
 	void set_platform_number(const int platform_number);
 	void add_train(const Train* train);
 	void remove_train();

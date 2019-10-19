@@ -16,7 +16,7 @@ public:
 	~Passanger();
 
 	const Ticket& get_ticket() const;
-	
+
 	virtual void show() const;
 	friend std::ostream& operator<<(std::ostream& os, const Passanger& passanger);
 

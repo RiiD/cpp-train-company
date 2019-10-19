@@ -1,9 +1,10 @@
-
+//#include "pch.h"
 #include <iostream>
 #include <string>
 #include "Station.h"
 #include "Train_Company.h"
 #include "Driver_Conductor.h"
+
 
 enum actions { NONE, CREATE_TRAIN, MODIFY_TRAIN, DECOMISSION_TRAIN, BOARD_DISEMBARK_PASSANGERS, BOARD_DISEMBARK_CREW, TRAIN_RUN, SHOW_TRAINS, SHOW_TRAINS_COMPANY, QUIT };
 
@@ -19,7 +20,6 @@ void main()
 	Station rome_station(Rome);
 
 	Train_Company train_company;
-
 	train_company += paris_station;
 	train_company += berlin_station;
 	train_company += vienna_station;
@@ -84,7 +84,7 @@ void show_menu()
 void create_train(Train_Company& train_company)
 {
 	train_company.show();
-	std::cout << "Please select the train station in which you would like to create the train: " << std::endl;
+	std::cout << "Please select the train station in which you would like to create the train: " << std::endl; 
 	Station& selected_station = train_company.select_station;
 
 	while (!selected_station.platforms_are_available) {
@@ -99,8 +99,8 @@ void create_train(Train_Company& train_company)
 	while (selected_platform.is_occupied)
 	{
 		selected_station.show;
-		std::cout << "The platform you have selected is occupied by a train - please select another platform: ";
-		selected_platform = selected_station.select_platform;
+		std::cout << "The platform you have selected is occupied by a train - please select another platform: "; 
+		selected_platform = selected_station.select_platform; 
 	}
 
 	Train new_train(selected_station); 

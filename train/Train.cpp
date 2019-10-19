@@ -8,9 +8,9 @@
 
 using namespace std;
 
-Train::Train(const Station* station)
+Train::Train(Platform* platform)
 {
-	this->station = station;
+	this->platform = platform;
 }
 
 Train::Train(const Train& other)
@@ -19,7 +19,8 @@ Train::Train(const Train& other)
 	number_of_carriages = other.number_of_carriages;
 	number_of_crew_members = other.number_of_crew_members;
 
-	station = other.station;
+	platform = other.platform;
+	platform->set_train(this);
 
 	for (int i = 0; i < number_of_crew_members; i++)
 	{
@@ -53,23 +54,32 @@ Train:: ~Train()
 	{
 		delete crew_members[i];
 	}
+
+	if (platform->get_train_in_platform() == this) {
+		platform->set_train(nullptr);
+	}
 }
 
-const Station* Train::get_station() const
+const Platform* Train::get_platform() const
 {
-	return station;
+	return platform;
 }
 
-void Train::set_station(const Station* station)
+void Train::set_platform(Platform* platform)
 {
-	this->station = station;
+
+	if (this->platform->get_train_in_platform() == this) {
+		this->platform->set_train(nullptr);
+	}
+	this->platform = platform;
+	platform->set_train(this);
 }
 
 const Passanger* Train::get_passanger(char* name)
 {
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(this->passangers[i]->get_name(), name))
+		if (strcmp(this->passangers[i]->get_name(), name) == 0)
 		{
 			return this->passangers[i];
 		}
@@ -81,7 +91,7 @@ const Person* Train::get_crewmember(char* name)
 {
 	for (int i = 0; i < number_of_crew_members; i++)
 	{
-		if (strcmp(this->crew_members[i]->get_name(), name))
+		if (strcmp(this->crew_members[i]->get_name(), name) == 0)
 		{
 			return this->crew_members[i];
 		}
@@ -147,7 +157,7 @@ void Train::remove_crew_member(const Person& person)
 
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
-			if (strcmp(crew_members[i]->get_name(), person.get_name()))
+			if (strcmp(crew_members[i]->get_name(), person.get_name()) == 0)
 			{
 				found = i;
 			}
@@ -179,7 +189,7 @@ void Train::remove_passanger(const Passanger& passanger)
 
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(passangers[i]->get_name(), passanger.get_name()))
+		if (strcmp(passangers[i]->get_name(), passanger.get_name()) == 0)
 		{
 			found = i;
 		}
@@ -229,7 +239,7 @@ bool Train:: is_passanger_onboard(const Passanger& passenger) const
 {
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(this->passangers[i]->get_name(), passenger.get_name()))
+		if (strcmp(this->passangers[i]->get_name(), passenger.get_name()) == 0)
 		{
 			return true;
 		}
@@ -323,7 +333,8 @@ const  Train& Train::operator=(const Train& other)
 		passangers[i] = new Passanger(*other.passangers[i]);
 	}
 
-	station = other.station;
+	platform = other.platform;
+	platform->set_train(this);
 
 	return *this;
 }
@@ -368,7 +379,21 @@ void Train:: show() const
 	cout << *this << endl;
 }
 
- std::ostream& operator<<(std::ostream& os, const Train& Train)
+ std::ostream& operator<<(std::ostream& os, const Train& train)
 {
-	 return os << "in this train there are:" << Train.number_of_carriages << "carriages" << Train.number_of_crew_members << "crew members" << Train.number_of_passangers << "passangers";
+	 return os << &train;
 }
+
+ std::ostream & operator<<(std::ostream & os, const Train * train)
+ {
+	 os << "Train ";
+	 if (train->platform != nullptr)
+	 {
+		 os << "on platform " << train->platform;
+	 }
+	 return os 
+		 << " with "
+		 << train->number_of_carriages << " carriages, " 
+		 << train->number_of_crew_members << " crew members and "
+		 << train->number_of_passangers << "passangers";
+ }

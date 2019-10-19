@@ -5,7 +5,7 @@
 
 #include "Carriage.h"
 #include "Passanger.h"
-#include "Station.h"
+#include "Platform.h"
 #include "Person.h"
 #include "Driver.h"
 #include "Driver_Conductor.h"
@@ -15,7 +15,7 @@ constexpr int MAX_NUMBER_OF_CARRAIGES = 20;
 constexpr int MAX_NUMBER_OF_PASSENGERS = 20;
 
 class Passanger;
-class Station;
+class Platform;
 class Carriage;
 
 class Train
@@ -28,20 +28,20 @@ private:
 	int number_of_carriages = 0;
 	int number_of_crew_members = 0;
 
-	const Station* station;
+	Platform* platform;
 	Carriage* carriages[MAX_NUMBER_OF_CARRAIGES];
 	const Person* crew_members[MAX_NUMBER_OF_CREW_MEMBERS];
 	const Passanger* passangers[MAX_NUMBER_OF_PASSENGERS];
 
 public:
-	Train(const Station* station);
+	Train(Platform* platform);
 	Train(const Train& train);
 	~Train();
 
 	//regular functions:
 
-	const Station* get_station() const;
-	void set_station(const Station* station);
+	const Platform* get_platform() const;
+	void set_platform(Platform* platform);
 
 	const Passanger* get_passanger(char* name);
 	const Person* get_crewmember(char* name);
@@ -74,6 +74,7 @@ public:
 	//operators:
 
 	friend std::ostream& operator<<(std::ostream& os, const Train& Train);
+	friend std::ostream& operator<<(std::ostream& os, const Train* Train);
 
 	const Train& operator=(const Train& other);
 	

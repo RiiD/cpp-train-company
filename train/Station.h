@@ -39,6 +39,7 @@ public:
 	Platform& operator[](int index) const;
 
 	Platform* select_platform() const;
+	Platform* get_available_platform() const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Station& platform);
 	friend std::ostream& operator<<(std::ostream& os, const Station* platform);

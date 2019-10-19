@@ -8,8 +8,9 @@
 
 using namespace std;
 
-Platform::Platform(const int platform_number) : platform_number(platform_number)
+Platform::Platform(const int platform_number, Station* station) : platform_number(platform_number)
 {
+	this->station = station;
 }
 
 const Train* Platform::get_train_in_platform() const
@@ -22,7 +23,7 @@ int Platform::get_platform_number() const
 	return this->platform_number;
 }
 
-void Platform::set_train(const Train* train) 
+void Platform::set_train(Train* train) 
 {
 	train_in_platform = train;
 }
@@ -49,17 +50,22 @@ std::ostream& operator<<(std::ostream& os, const Platform& platform)
 
 std::ostream & operator<<(std::ostream & os, const Platform * platform)
 {
-	return os << "platform " << platform->get_platform_number() << (platform->is_occupied() ? " is occupied" : " is not occupied");
+	return os << "platform #" << platform->get_platform_number() << " in " << platform->station;
 }
 
-const Platform& Platform::operator+=(const Train* train)
+const Platform& Platform::operator+=(Train* train)
 {
 	this->set_train(train);
 	return *this;
 }
 
-const Platform& Platform::operator-=(const Train* train)
+const Platform& Platform::operator-=(Train* train)
 {
 	this->remove_train();
 	return *this;
+}
+
+Station* Platform::get_station() const
+{
+	return station;
 }

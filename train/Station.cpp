@@ -5,6 +5,7 @@
 #include <cstring>
 
 #include "Station.h"
+#include "CancelledException.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ Station::Station(City city)
 	for (int c = 0, p = 0; c < NUM_OF_CITIES, p < NUM_OF_CITIES - 1; c++)
 	{
 		if (city != c) {
-			platforms[p] = new Platform(c);
+			platforms[p] = new Platform(c, this);
 			++p;
 		}
 	}
@@ -56,10 +57,12 @@ bool Station::platforms_are_available() const
 
 	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
 	{
-		if (this->platforms[i]->is_occupied())
-			return false;
+		if (!this->platforms[i]->is_occupied())
+		{
+			return true;
+		}
 	}
-	return true;
+	return false;
 }
 
 Platform& Station::get_platform(int platform_number) const
@@ -73,11 +76,7 @@ Platform& Station::get_platform(int platform_number) const
 
 void Station::show() const
 {
-	cout << "Station of: " << this->get_city() << "coordinate:" << "("<<this->get_coordinate_X()<<","<<this->get_coordinate_Y()<<")"  << endl;
-	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
-	{
-		cout << "platform " << i << ": " << platforms[i] << endl;
-	}
+	cout << this << endl;
 }
 
 bool Station::operator!=(const Station& other) const
@@ -114,10 +113,22 @@ Platform * Station::select_platform() const
 
 	if (selection == 0) 
 	{
-		throw "canceled";
+		throw CancelledException();
 	}
 
 	return platforms[selection - 1];
+}
+
+Platform* Station::get_available_platform() const
+{
+	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+	{
+		if (!platforms[i]->is_occupied()) 
+		{
+			return platforms[i];
+		}
+	}
+	return nullptr;
 }
 
 std::ostream & operator<<(std::ostream & os, const Station& station)
@@ -127,14 +138,6 @@ std::ostream & operator<<(std::ostream & os, const Station& station)
 
 std::ostream & operator<<(std::ostream & os, const Station* station)
 {
-	char* cityName = City_Name[station->get_city()];
-	os
-		<< "Station of: " << cityName << endl
-		<< "Coordinate:" << "(" << station->get_coordinate_X() << "," << station->get_coordinate_Y() << ")" << endl;
-
-	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
-	{
-		os << "platform " << i << ": " << station->platforms[i] << endl;
-	}
-	return os;
+	return os 
+		<< "Station " << City_Name[station->get_city()] << "(" << station->get_coordinate_X() << ", " << station->get_coordinate_Y() << ")";
 }

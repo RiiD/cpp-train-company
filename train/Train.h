@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "Carriage.h"
 #include "Passanger.h"
@@ -11,13 +12,11 @@
 #include "Driver.h"
 #include "Driver_Conductor.h"
 
-constexpr int MAX_NUMBER_OF_CREW_MEMBERS = 5;
-constexpr int MAX_NUMBER_OF_CARRAIGES = 20;
-constexpr int MAX_NUMBER_OF_PASSENGERS = 20;
-
 class Passanger;
 class Platform;
 class Carriage;
+
+using namespace std;
 
 class Train
 {
@@ -25,14 +24,10 @@ public:
 	
 
 private:
-	int number_of_passangers = 0;
-	int number_of_carriages = 0;
-	int number_of_crew_members = 0;
-
 	Platform* platform;
-	Carriage* carriages[MAX_NUMBER_OF_CARRAIGES];
-	const Person* crew_members[MAX_NUMBER_OF_CREW_MEMBERS];
-	const Passanger* passangers[MAX_NUMBER_OF_PASSENGERS];
+	vector<Carriage*> carriages;
+	vector<Person*> crew_members;
+	vector<Passanger*> passangers;
 
 public:
 	Train(Platform* platform);

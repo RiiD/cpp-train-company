@@ -1,7 +1,11 @@
 #ifndef __TRAIN_COMPANY_H
 #define __TRAIN_COMPANY_H
 
+#include <vector>
+
 #include "Station.h"
+
+using namespace std;
 
 constexpr int MAX_NUMBER_OF_TRAINS = 25;
 constexpr int MAX_NUMBER_OF_EMPLOYEES = 25 * (2 + 1);
@@ -9,13 +13,9 @@ constexpr int MAX_NUMBER_OF_EMPLOYEES = 25 * (2 + 1);
 class Train_Company
 {
 private:
-	Station* stations[NUM_OF_CITIES];
-	Train* trains[MAX_NUMBER_OF_TRAINS];
-	Person* employees[MAX_NUMBER_OF_EMPLOYEES];
-
-	int number_of_trains = 0;
-	int number_of_stations = 0;
-	int number_of_employees = 0;
+	vector<Station*> stations;
+	vector<Train*> trains;
+	vector<Person*> employees;
 
 	Train_Company(const Train_Company& train_company);
 public:

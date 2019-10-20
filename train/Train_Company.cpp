@@ -3,6 +3,7 @@
 #pragma warning(disable: 4996)
 #include <iostream>
 #include <cstring>
+#include <algorithm>
 
 #include "Train_Company.h"
 #include "CancelledException.h"
@@ -15,24 +16,16 @@ Train_Company::Train_Company()
 
 Train_Company::~Train_Company() 
 {
-	for (int i = 0; i < number_of_trains; i++) 
-	{
-		delete trains[i];
-	}
-
-	for (int i = 0; i < number_of_employees; i++)
-	{
-		delete employees[i];
-	}
+	for_each(trains.begin(), trains.end(), [](Train* t) { delete t; });
+	for_each(employees.begin(), employees.end(), [](Person* t) { delete t; });
 }
 
 Station* Train_Company::get_station(City city) const
 {
-	for (int i = 0; i < number_of_stations; i++) 
+	auto it = find_if(stations.begin(), stations.end(), [&](Station* s) { return city == s->get_city(); });
+	if (it != stations.end())
 	{
-		if (stations[i]->get_city() == city) {
-			return stations[i];
-		}
+		return *it;
 	}
 
 	return nullptr;
@@ -40,66 +33,42 @@ Station* Train_Company::get_station(City city) const
 
 const Train* Train_Company::get_train(int index) const
 {
-	if (index < 0 || index >= number_of_trains)
-	{
-		throw CancelledException();
-	}
 	return trains[index];
 }
 
 int Train_Company::get_number_of_trains() const
 {
-	return number_of_trains;
+	return trains.size();
 }
 
 void Train_Company::decomission_train(Train* train)
 {
-	int i = 0;
-	for (; i < number_of_trains && trains[i] != train; i++) {}
-
-	if (i < number_of_trains)
+	for (auto it = trains.begin(), end = trains.end(); it != end; ++it)
 	{
-		delete trains[i];
-		--number_of_trains;
-		for (; i < number_of_trains; i++) 
+		auto c = *it;
+		if (c == train)
 		{
-			trains[i] = trains[i + 1];
+			trains.erase(it);
+			delete c;
+			break;
 		}
 	}
 }
 
 void Train_Company::show() const
 {
-	cout << "Train company" << endl
-		 << "Stations:" << endl;
-
-	for (int i = 0; i < number_of_stations; i++)
-	{
-		cout << i << ". " << *stations[i] << endl;
-	}
-
-	cout << "Trains:" << endl;
-	for (int i = 0; i < number_of_trains; i++)
-	{
-		cout << i << ". " << *trains[i] << endl;
-	}
-
-	cout << "Employees:" << endl;
-	for (int i = 0; i < number_of_employees; i++)
-	{
-		cout << i << ". " << employees[i] << endl;
-	}
+	cout << "Train company has " << stations.size() << " stations, " << trains.size() << " trains, and " << employees.size() << " employees" << endl;
 }
 
 void Train_Company::operator+=(Station & station)
 {
-	stations[number_of_stations++] = &station;
+	stations.push_back(&station);
 }
 
 Train * Train_Company::operator+=(Train& train)
 {
 	Train* company_train = new Train(train);
-	trains[number_of_trains++] = company_train;
+	trains.push_back(company_train);
 	return company_train;
 }
 
@@ -108,14 +77,12 @@ Station* Train_Company::select_station() const
 	int selection;
 	do
 	{
-		for (int i = 0; i < number_of_stations; i++)
-		{
-			cout << i + 1 << ". " << stations[i] << endl;
-		}
+		int i = 0;
+		for_each(stations.begin(), stations.end(), [&](Station* s) { cout << ++i << ". " << s << endl; });
 
 		cout << ": ";
 		cin >> selection;
-	} while (selection < 0 || selection > number_of_stations);
+	} while (selection < 0 || selection > stations.size());
 
 	if (selection == 0)
 	{
@@ -130,14 +97,12 @@ Train* Train_Company::select_train() const
 	int selection;
 	do
 	{
-		for (int i = 0; i < number_of_trains; i++)
-		{
-			cout << i + 1 << ". " << trains[i] << endl;
-		}
+		int i = 0;
+		for_each(trains.begin(), trains.end(), [&](Train* s) { cout << ++i << ". " << s << endl; });
 
 		cout << ": ";
 		cin >> selection;
-	} while (selection < 0 || selection > number_of_trains);
+	} while (selection < 0 || selection > trains.size());
 
 	if (selection == 0)
 	{

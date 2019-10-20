@@ -254,9 +254,8 @@ bool Train:: are_there_drivers() const
 	for (int i = 0; i < number_of_crew_members; i++)
 	{
 		const Driver* driver = dynamic_cast<const Driver*>(crew_members[i]);
-		const Driver_Conductor* driver_conductor = dynamic_cast<const Driver_Conductor*>(crew_members[i]);
 
-		if (driver != nullptr || driver_conductor != nullptr)
+		if (driver != nullptr)
 		{
 			counter++;
 			if (counter >= 2)
@@ -273,9 +272,8 @@ bool Train::is_there_conductor() const
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
 			const Conductor* conductor = dynamic_cast<const Conductor*>(crew_members[i]);
-			const Driver_Conductor* driver_conductor = dynamic_cast<const Driver_Conductor*>(crew_members[i]);
 
-			if (conductor != nullptr || driver_conductor != nullptr)
+			if (conductor != nullptr)
 			{
 				return true;
 			}

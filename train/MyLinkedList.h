@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
 
 template <class T>
 class MyLinkedList
@@ -18,11 +19,6 @@ private:
 		}
 
 	public:
-		//~MyNode()
-		//{
-		//	cout << "~MyLinkedList()" << endl;
-		//}
-
 		MyNode<T>* prev;
 		T item;
 
@@ -33,6 +29,18 @@ private:
 	};
 
 	MyNode<T>* head;
+	MyNode<T>* tail;
+
+	void recursive_iterate(MyNode<T>* node, std::function<void(T)> f) const
+	{
+		if (node == nullptr)
+		{
+			return;
+		}
+
+		recursive_iterate(node->prev, f);
+		f(node->item);
+	}
 
 public:
 	MyLinkedList() 
@@ -82,5 +90,35 @@ public:
 		}
 
 		return os;
+	}
+
+	const MyNode<T>* get_head() const 
+	{
+		return head;
+	}
+
+	// This method allows to iterate over the list in insertion order.
+	void for_each(std::function<void (T)> f) const
+	{
+		recursive_iterate(head, f);
+	}
+
+	T operator[](int index)
+	{
+		if (index < 0)
+		{
+			throw "out of bounds";
+		}
+
+		T res;
+
+		for_each([&](T p) 
+		{
+			if (index-- == 0) {
+				res = p;
+			}
+		});
+
+		return res;
 	}
 };

@@ -11,8 +11,11 @@ using namespace std;
 
 Station::~Station()
 {
-	for (int i = 0; i < NUM_OF_CITIES - 1; i++) {
-		delete platforms[i];
+	auto next = platforms.get_head();
+	while (next != nullptr)
+	{
+		delete next->item;
+		next = next->prev;
 	}
 }
 
@@ -22,11 +25,10 @@ Station::Station(City city)
 	coordinate_X = City_Coordinates[city][0];
 	coordinate_Y = City_Coordinates[city][1];
 
-	for (int c = 0, p = 0; c < NUM_OF_CITIES, p < NUM_OF_CITIES - 1; c++)
+	for (int c = 0, p = 0; c < NUM_OF_CITIES; c++)
 	{
 		if (city != c) {
-			platforms[p] = new Platform(c, this);
-			++p;
+			platforms.append(new Platform(p++, this));
 		}
 	}
 }
@@ -54,24 +56,16 @@ void Station::set_coordinates(int x, int y)
 
 bool Station::platforms_are_available() const
 {
-
-	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+	auto next = platforms.get_head();
+	while (next != nullptr)
 	{
-		if (!this->platforms[i]->is_occupied())
+		if (!next->item->is_occupied())
 		{
 			return true;
 		}
+		next = next->prev;
 	}
 	return false;
-}
-
-Platform& Station::get_platform(int platform_number) const
-{
-	if (platform_number < 0 || platform_number >= NUM_OF_CITIES)
-	{
-		throw "Index out of bound";
-	}
-	return *this->platforms[platform_number];
 }
 
 void Station::show() const
@@ -92,20 +86,13 @@ bool Station:: operator==(const Station& other) const
 		get_coordinate_Y() == other.get_coordinate_Y();
 }
 
-Platform& Station::operator[](int index) const
-{
-	return get_platform(index);
-}
-
-Platform * Station::select_platform() const
+Platform* Station::select_platform()
 {
 	int selection;
 	do
 	{
-		for (int i = 0; i < NUM_OF_CITIES - 1; i++)
-		{
-			cout << i + 1 << ". " << platforms[i] << endl;
-		}
+		int i = 0;
+		platforms.for_each([&] (Platform* p) { cout << i << "." << p << endl; });
 
 		cout << ": ";
 		cin >> selection;
@@ -121,13 +108,16 @@ Platform * Station::select_platform() const
 
 Platform* Station::get_available_platform() const
 {
-	for (int i = 0; i < NUM_OF_CITIES - 1; i++)
+	auto next = platforms.get_head();
+	while (next != nullptr)
 	{
-		if (!platforms[i]->is_occupied()) 
+		if (!next->item->is_occupied())
 		{
-			return platforms[i];
+			return next->item;
 		}
+		next = next->prev;
 	}
+
 	return nullptr;
 }
 

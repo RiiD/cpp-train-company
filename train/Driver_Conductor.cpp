@@ -8,11 +8,7 @@
 
 using namespace std;
 
-Driver_Conductor::Driver_Conductor(const char* name) : Driver(name), Conductor(name), Person(name)
-{
-}
-
-Driver_Conductor::Driver_Conductor(const Driver_Conductor& other) : Driver(other), Conductor(other), Person(other)
+Driver_Conductor::Driver_Conductor(string name) : Driver(name), Conductor(name), Person(name)
 {
 }
 

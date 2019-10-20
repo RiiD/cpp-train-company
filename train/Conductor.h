@@ -2,14 +2,14 @@
 #define __CONDUCTOR_H
 
 #include <iostream>
+#include <string>
 
 #include "Person.h"
 
 class Conductor : virtual public Person
 {
 public:
-	Conductor(const char* name);
-	Conductor(const Conductor& other);
+	Conductor(string name);
 
 	virtual void show() const;
 	virtual Person* clone() const override;

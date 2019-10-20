@@ -2,6 +2,7 @@
 #define __PASSANGER_H
 
 #include <iostream>
+#include <string>
 
 #include "Ticket.h"
 #include "Person.h"
@@ -14,12 +15,11 @@ private:
 	const Ticket* ticket;
 
 public:
-	Passanger(char* name);
-	Passanger(const Passanger& other);
+	Passanger(string name);
 
 	const Ticket* get_ticket() const;
 
-	virtual void show() const;
+	virtual void show() const override;
 	virtual ostream& dynamic_ostream(ostream& os, const Person* person) const override;
 	virtual Person* clone() const override;
 };

@@ -1,6 +1,8 @@
 #ifndef __STATION_H
 #define __STATION_H
 
+#include <string>
+
 #include "Platform.h"
 #include "MyLinkedList.h"
 

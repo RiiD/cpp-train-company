@@ -2,25 +2,26 @@
 #define __PERSON_H
 
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 class Person
 {
 private:
-	char* name;
-	
+	string name;
 
 public:
-	Person(const char* name);
-	Person(const Person& other);
-	virtual ~Person();
+	Person(string name);
+	virtual ~Person() 
+	{
+	}
 
 	virtual void show() const;
 	virtual ostream& dynamic_ostream(ostream& os, const Person* person) const = 0;
 
-	char* get_name() const;
-	void set_name(const char* name);
+	string get_name() const;
+	void set_name(string name);
 
 	virtual Person* clone() const =0;
 

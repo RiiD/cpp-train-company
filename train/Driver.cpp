@@ -7,11 +7,7 @@
 
 using namespace std;
 
-Driver::Driver(const char* name) : Person(name)
-{
-}
-
-Driver::Driver(const Driver & other) : Person(other)
+Driver::Driver(string name) : Person(name)
 {
 }
 

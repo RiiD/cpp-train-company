@@ -156,6 +156,7 @@
     <ClInclude Include="Conductor.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="Driver_Conductor.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="MyLinkedList.h" />
     <ClInclude Include="Passanger.h" />
     <ClInclude Include="Person.h" />

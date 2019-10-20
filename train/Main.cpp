@@ -8,6 +8,7 @@
 #include "Driver_Conductor.h"
 #include "CancelledException.h"
 #include "MyLinkedList.h"
+#include "globals.h"
 
 enum actions { NONE, CREATE_TRAIN, MODIFY_TRAIN, DECOMISSION_TRAIN, BOARD_DISEMBARK_PASSANGERS, BOARD_DISEMBARK_CREW, TRAIN_RUN, SHOW_TRAINS, SHOW_TRAINS_COMPANY, QUIT };
 
@@ -25,6 +26,9 @@ void show_train_company(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
 void test_linked_list();
+
+int created = 0;
+int destroyed = 0;
 
 void main()
 {
@@ -52,6 +56,7 @@ void main()
 
 	while (action != QUIT)
 	{
+		cout << created << endl << destroyed << endl;
 		show_menu();
 		std::cin >> action;
 
@@ -207,7 +212,7 @@ void board_disembark_passangers(Train_Company& train_company)
 {
 	try {
 		int action;
-		char name[20];
+		string name;
 		const Passanger* passanger;
 
 		std::cout << "Please select a train: " << endl;
@@ -269,7 +274,7 @@ void board_disembark_crew(Train_Company& train_company)
 	try {
 		int action;
 		int crew_member_type;
-		char name[20];
+		string name;
 		const Person* crew_member;
 
 		std::cout << "Please select a train: " << endl;

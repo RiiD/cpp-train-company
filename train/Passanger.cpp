@@ -7,13 +7,8 @@
 
 using namespace std;
 
-Passanger::Passanger(char* name) : Person(name)
+Passanger::Passanger(string name) : Person(name)
 {
-}
-
-Passanger::Passanger(const Passanger& other) : Person(other.get_name())
-{
-	ticket = other.ticket;
 }
 
 const Ticket* Passanger::get_ticket() const

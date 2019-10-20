@@ -7,11 +7,7 @@
 
 using namespace std;
 
-Conductor::Conductor(const char* name): Person(name)
-{
-}
-
-Conductor::Conductor(const Conductor& other) : Person(other)
+Conductor::Conductor(string name) : Person(name)
 {
 }
 

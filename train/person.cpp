@@ -7,18 +7,7 @@
 
 using namespace std;
 
-Person::~Person()
-{
-	delete[]name;
-}
-
-Person::Person(const char* name)
-{
-	this->name = new char[strlen(name) + 1];
-	strcpy(this->name, name);
-}
-
-Person::Person(const Person& other) : Person(other.name)
+Person::Person(string name) : name(name)
 {
 }
 
@@ -27,16 +16,14 @@ void Person::show() const
 	cout << "Name: " << name << ".\n";
 }
 
-char* Person::get_name() const
+string Person::get_name() const
 {
 	return name;
 }
 
-void Person::set_name(const char* newName)
+void Person::set_name(string newName)
 {
-	delete[]name;
-	name = new char[strlen(newName) + 1];
-	strcpy(name, newName);
+	name = newName;
 }
 
 std::ostream & operator<<(std::ostream& os, const Person* person)

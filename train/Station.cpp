@@ -11,12 +11,7 @@ using namespace std;
 
 Station::~Station()
 {
-	auto next = platforms.get_head();
-	while (next != nullptr)
-	{
-		delete next->item;
-		next = next->prev;
-	}
+	platforms.for_each([](Platform* p) { delete p; });
 }
 
 Station::Station(City city)
@@ -91,8 +86,8 @@ Platform* Station::select_platform()
 	int selection;
 	do
 	{
-		int i = 0;
-		platforms.for_each([&] (Platform* p) { cout << i << "." << p << endl; });
+		int i = 1;
+		platforms.for_each([&] (Platform* p) { cout << i++ << "." << p << endl; });
 
 		cout << ": ";
 		cin >> selection;

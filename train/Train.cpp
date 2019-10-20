@@ -5,12 +5,14 @@
 #include <cstring>
 
 #include "Train.h"
+#include "globals.h"
 
 using namespace std;
 
 Train::Train(Platform* platform)
 {
 	this->platform = platform;
+	++created;
 }
 
 Train::Train(const Train& other)
@@ -36,6 +38,7 @@ Train::Train(const Train& other)
 	{
 		carriages[i] = new Carriage(other.carriages[i]->get_carriage_type());
 	}
+	++created;
 }
 
 Train:: ~Train()
@@ -58,6 +61,8 @@ Train:: ~Train()
 	if (platform->get_train_in_platform() == this) {
 		platform->set_train(nullptr);
 	}
+
+	--created;
 }
 
 const Platform* Train::get_platform() const
@@ -75,23 +80,23 @@ void Train::set_platform(Platform* platform)
 	platform->set_train(this);
 }
 
-const Passanger* Train::get_passanger(char* name)
+const Passanger* Train::get_passanger(string name)
 {
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(this->passangers[i]->get_name(), name) == 0)
+		if (passangers[i]->get_name() == name)
 		{
-			return this->passangers[i];
+			return passangers[i];
 		}
 	}
 	return nullptr;
 }
 
-const Person* Train::get_crewmember(char* name)
+const Person* Train::get_crewmember(string name)
 {
 	for (int i = 0; i < number_of_crew_members; i++)
 	{
-		if (strcmp(this->crew_members[i]->get_name(), name) == 0)
+		if (crew_members[i]->get_name() == name)
 		{
 			return this->crew_members[i];
 		}
@@ -117,8 +122,7 @@ int Train::get_number_of_passangers() const
 
 void Train::add_carriage(Carriage::Type type)
 {
-	this->carriages[number_of_carriages] = new Carriage(type);
-	number_of_carriages++;
+	this->carriages[number_of_carriages++] = new Carriage(type);
 }
 
 void Train::remove_carriage(Carriage::Type type)
@@ -127,7 +131,7 @@ void Train::remove_carriage(Carriage::Type type)
 
 	for (int i = 0; i < number_of_carriages; i++)
 	{
-		if (this->carriages[i]->get_carriage_type() == type)
+		if (carriages[i]->get_carriage_type() == type)
 		{
 			found = i;
 			break;
@@ -136,10 +140,10 @@ void Train::remove_carriage(Carriage::Type type)
 
 	if (found >= 0)
 	{
-		delete this->carriages[found];
+		delete carriages[found];
 		for (int i = found; i < number_of_carriages - 1; ++i)
 		{
-			this->carriages[i] = this->carriages[i + 1];
+			carriages[i] = carriages[i + 1];
 		}
 		number_of_carriages--;
 	}
@@ -147,8 +151,7 @@ void Train::remove_carriage(Carriage::Type type)
 
 void Train::add_crew_member(const Person& person)
 {
-	this->crew_members[number_of_crew_members] = person.clone();
-	number_of_crew_members++;
+	this->crew_members[number_of_crew_members++] = person.clone();
 }
 
 void Train::remove_crew_member(const Person& person)
@@ -157,7 +160,7 @@ void Train::remove_crew_member(const Person& person)
 
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
-			if (strcmp(crew_members[i]->get_name(), person.get_name()) == 0)
+			if (crew_members[i]->get_name() == person.get_name())
 			{
 				found = i;
 			}
@@ -178,8 +181,7 @@ void Train::add_passanger(const Passanger& passanger)
 {
 	if (!is_passanger_onboard(passanger))
 	{
-		this->passangers[number_of_passangers] = new Passanger(passanger);
-		number_of_passangers++;
+		this->passangers[number_of_passangers++] = new Passanger(passanger);
 	}
 }
 
@@ -189,7 +191,7 @@ void Train::remove_passanger(const Passanger& passanger)
 
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(passangers[i]->get_name(), passanger.get_name()) == 0)
+		if (passangers[i]->get_name() == passanger.get_name())
 		{
 			found = i;
 		}
@@ -221,7 +223,7 @@ bool Train::can_passanger_board() const
 {
 	for (int i = 0; i < number_of_carriages; i++)
 	{
-		if (this->carriages[i]->get_carriage_type() == Carriage::Type::Passangers)
+		if (carriages[i]->get_carriage_type() == Carriage::Type::Passangers)
 		{
 			return true;
 		}
@@ -239,7 +241,7 @@ bool Train:: is_passanger_onboard(const Passanger& passenger) const
 {
 	for (int i = 0; i < number_of_passangers; i++)
 	{
-		if (strcmp(this->passangers[i]->get_name(), passenger.get_name()) == 0)
+		if (passangers[i]->get_name() == passenger.get_name())
 		{
 			return true;
 		}
@@ -247,16 +249,15 @@ bool Train:: is_passanger_onboard(const Passanger& passenger) const
 	return false;
 }
 
-bool Train:: are_there_drivers() const
+bool Train::are_there_drivers() const
 {
 	int counter = 0;
 
 	for (int i = 0; i < number_of_crew_members; i++)
 	{
 		const Driver* driver = dynamic_cast<const Driver*>(crew_members[i]);
-		const Driver_Conductor* driver_conductor = dynamic_cast<const Driver_Conductor*>(crew_members[i]);
 
-		if (driver != nullptr || driver_conductor != nullptr)
+		if (driver != nullptr)
 		{
 			counter++;
 			if (counter >= 2)
@@ -273,9 +274,8 @@ bool Train::is_there_conductor() const
 		for (int i = 0; i < number_of_crew_members; i++)
 		{
 			const Conductor* conductor = dynamic_cast<const Conductor*>(crew_members[i]);
-			const Driver_Conductor* driver_conductor = dynamic_cast<const Driver_Conductor*>(crew_members[i]);
 
-			if (conductor != nullptr || driver_conductor != nullptr)
+			if (conductor != nullptr)
 			{
 				return true;
 			}

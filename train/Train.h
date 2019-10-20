@@ -2,6 +2,7 @@
 #define __TRAIN_H
 
 #include <iostream>
+#include <string>
 
 #include "Carriage.h"
 #include "Passanger.h"
@@ -43,8 +44,8 @@ public:
 	const Platform* get_platform() const;
 	void set_platform(Platform* platform);
 
-	const Passanger* get_passanger(char* name);
-	const Person* get_crewmember(char* name);
+	const Passanger* get_passanger(string name);
+	const Person* get_crewmember(string name);
 
 	int get_number_of_crew_member() const;
 	int get_number_of_carriage() const;

@@ -13,13 +13,20 @@ constexpr int MAX_NUMBER_OF_EMPLOYEES = 25 * (2 + 1);
 class Train_Company
 {
 private:
+	static Train_Company instance;
+
 	vector<Station*> stations;
 	vector<Train*> trains;
 	vector<Person*> employees;
 
 	Train_Company(const Train_Company& train_company);
-public:
 	Train_Company();
+public:
+	static Train_Company& get_instance()
+	{
+		return instance;
+	};
+	
 	~Train_Company();
 
 	//regular functions:

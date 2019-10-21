@@ -26,6 +26,7 @@ void show_train_company(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
 void show_trains(const Train_Company& train_company);
 void test_linked_list();
+void build_train();
 
 int created = 0;
 int destroyed = 0;
@@ -47,7 +48,7 @@ void main()
 	Station prague_station(Prague);
 	Station rome_station(Rome);
 
-	Train_Company train_company;
+	Train_Company& train_company = Train_Company::get_instance();
 	train_company += paris_station;
 	train_company += berlin_station;
 	train_company += vienna_station;
@@ -63,7 +64,7 @@ void main()
 		switch (action)
 		{
 		case CREATE_TRAIN:
-			create_train(train_company);
+			build_train();
 			break;
 		case MODIFY_TRAIN:
 			modify_train(train_company);
@@ -143,6 +144,108 @@ void create_train(Train_Company& train_company)
 	}
 }
 
+void build_train()
+{
+	Train_Company& train_company = Train_Company::get_instance();
+
+	try {
+		TrainBuilder trainBuilder;
+
+		std::cout << "Please select the train station in which you would like to create the train: " << std::endl;
+
+		Station* selected_station = train_company.select_station();
+
+		while (!selected_station->platforms_are_available()) {
+			std::cout << "All platforms in this station are occupied by trains - please select another station:" << std::endl;
+			selected_station = train_company.select_station();
+		}
+
+		selected_station->show();
+		std::cout << "Please select an empty platform in which to create the train: " << std::endl;
+		Platform* selected_platform = selected_station->select_platform();
+
+		while (selected_platform->is_occupied())
+		{
+			selected_station->show();
+			std::cout << "The platform you have selected is occupied by a train - please select another platform:" << std::endl;
+			selected_platform = selected_station->select_platform();
+		}
+
+		trainBuilder.setPlatform(selected_platform);
+
+		do {
+			int action;
+			int type;
+			string name;
+
+			cout << "What you want to add to the train?" << endl;
+			std::cout << "1 - Carriage" << std::endl;
+			std::cout << "2 - Crew member" << std::endl;
+			std::cout << "3 - Quit" << std::endl;
+
+			cin >> action;
+
+			switch (action)
+			{
+			case 1:
+				do {
+					std::cout << "Which type of carraige (Passangers - 0, Cargo - 1, Restaurant - 2, Engine - 3) would you to add to the train?";
+					std::cin >> type;
+				} while (type < 0 || type > 3);
+
+				trainBuilder.addCarriage((Carriage::Type) type);
+				break;
+			case 2:
+				while (true)
+				{
+					std::cout << "What is the crew member's name?" << std::endl;
+					std::cin >> name;
+
+					std::cout << "Which type of crew member (1 - Driver, 2 - Conductor, 3 - Driver Conductor) would you to add to the train?";
+					std::cin >> type;
+					try
+					{
+						switch (type)
+						{
+						case 1:
+							trainBuilder.addDriver(Driver(name));
+							break;
+						case 2:
+							trainBuilder.addConductor(Conductor(name));
+							break;
+						case 3:
+							trainBuilder.addConductor(Driver_Conductor(name));
+							break;
+						default:
+							std::cout << "Invalid selection - crew member not created" << std::endl;
+							break;
+						}
+						break;
+					}
+					catch (TrainBuilder::DuplicateException&)
+					{
+						cout << "Crew member already exists" << endl;
+					}
+				}
+				break;
+			case 3:
+				std::cout << "Quitting..." << std::endl;
+
+				train_company += trainBuilder.build();
+				return;
+			default:
+				std::cout << "Please select a valid option" << std::endl;
+				break;
+			}
+		} while (true);
+	}
+
+	catch (CancelledException&)
+	{
+		std::cout << "Cancelled" << endl;
+	}
+}
+
 void modify_train(Train_Company& train_company)
 {
 	try {
@@ -151,7 +254,6 @@ void modify_train(Train_Company& train_company)
 
 		std::cout << "Please select the train you would like to modify: " << endl;
 		Train* selected_train = train_company.select_train();
-
 		
 		do {
 			std::cout << "What would you like to do?" << std::endl;

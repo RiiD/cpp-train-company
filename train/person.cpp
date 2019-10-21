@@ -26,6 +26,11 @@ void Person::set_name(string newName)
 	name = newName;
 }
 
+bool Person::operator==(const Person& person)
+{
+	return get_name() == person.get_name();
+}
+
 std::ostream & operator<<(std::ostream& os, const Person* person)
 {
 	return person->dynamic_ostream(os, person);

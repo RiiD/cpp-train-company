@@ -11,6 +11,7 @@
 #include "Person.h"
 #include "Driver.h"
 #include "Driver_Conductor.h"
+#include "TrainBuilder.h"
 
 class Passanger;
 class Platform;
@@ -24,6 +25,8 @@ public:
 	
 
 private:
+	friend class TrainBuilder;
+
 	Platform* platform;
 	vector<Carriage*> carriages;
 	vector<Person*> crew_members;

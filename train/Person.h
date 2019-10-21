@@ -26,6 +26,8 @@ public:
 	virtual Person* clone() const =0;
 
 	friend std::ostream& operator<<(std::ostream& os, const Person* person);
+
+	bool operator == (const Person& person);
 };
 
 #endif

@@ -10,6 +10,8 @@
 
 using namespace std;
 
+Train_Company Train_Company::instance;
+
 Train_Company::Train_Company() 
 {
 }

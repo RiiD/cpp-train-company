@@ -40,25 +40,14 @@ void TrainBuilder::operator=(const TrainBuilder & other)
 	transform(other.crew.begin(), other.crew.end(), crew.begin(), [](Person* c) { return c->clone(); });
 }
 
-TrainBuilder & TrainBuilder::addDriver(Driver& driver)
-{ 
-	if (isCrewExists(&driver))
-	{
-		throw TrainBuilder::DuplicateException();
-	}
-
-	crew.push_back(driver.clone());
-	return *this;
-}
-
-TrainBuilder & TrainBuilder::addConductor(Conductor& conductor)
+TrainBuilder & TrainBuilder::addCrew(Person* person)
 {
-	if (isCrewExists(&conductor))
+	if (isCrewExists(person))
 	{
 		throw TrainBuilder::DuplicateException();
 	}
 
-	crew.push_back(conductor.clone());
+	crew.push_back(person->clone());
 	return *this;
 }
 

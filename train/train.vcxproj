@@ -160,6 +160,7 @@
     <ClInclude Include="MyLinkedList.h" />
     <ClInclude Include="Passanger.h" />
     <ClInclude Include="Person.h" />
+    <ClInclude Include="PersonFactory.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Station.h" />
     <ClInclude Include="Ticket.h" />
@@ -182,6 +183,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PersonFactory.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="Station.cpp" />
     <ClCompile Include="Ticket.cpp" />

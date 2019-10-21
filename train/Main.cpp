@@ -8,6 +8,7 @@
 #include "Driver_Conductor.h"
 #include "CancelledException.h"
 #include "MyLinkedList.h"
+#include "PersonFactory.h"
 #include "globals.h"
 
 enum actions { NONE, CREATE_TRAIN, MODIFY_TRAIN, DECOMISSION_TRAIN, BOARD_DISEMBARK_PASSANGERS, BOARD_DISEMBARK_CREW, TRAIN_RUN, SHOW_TRAINS, SHOW_TRAINS_COMPANY, QUIT };
@@ -196,36 +197,44 @@ void build_train()
 				trainBuilder.addCarriage((Carriage::Type) type);
 				break;
 			case 2:
-				while (true)
-				{
-					std::cout << "What is the crew member's name?" << std::endl;
-					std::cin >> name;
+				std::cout << "What is the crew member's name?" << std::endl;
+				std::cin >> name;
 
-					std::cout << "Which type of crew member (1 - Driver, 2 - Conductor, 3 - Driver Conductor) would you to add to the train?";
-					std::cin >> type;
-					try
+				std::cout << "Which type of crew member (1 - Driver, 2 - Conductor, 3 - Driver Conductor) would you to add to the train?";
+				std::cin >> type;
+
+				try
+				{
+					Person* crew_member;
+					PersonFactory personFactory;
+
+					switch (type)
 					{
-						switch (type)
-						{
-						case 1:
-							trainBuilder.addDriver(Driver(name));
-							break;
-						case 2:
-							trainBuilder.addConductor(Conductor(name));
-							break;
-						case 3:
-							trainBuilder.addConductor(Driver_Conductor(name));
-							break;
-						default:
-							std::cout << "Invalid selection - crew member not created" << std::endl;
-							break;
-						}
+					case 1:
+						crew_member = personFactory.getPerson(PersonFactory::Driver, name);
 						break;
+					case 2:
+						crew_member = personFactory.getPerson(PersonFactory::Conductor, name);
+						break;
+					case 3:
+						crew_member = personFactory.getPerson(PersonFactory::DriverConductor, name);
+						break;
+					default:
+						throw "Invalid selection";
 					}
-					catch (TrainBuilder::DuplicateException&)
-					{
-						cout << "Crew member already exists" << endl;
-					}
+
+					trainBuilder.addCrew(crew_member);
+					delete crew_member;
+
+					cout << "Crew member added" << endl;
+				}
+				catch (TrainBuilder::DuplicateException&)
+				{
+					cout << "Crew member already exists" << endl;
+				}
+				catch (const char* err)
+				{
+					std::cout << "Crew member not created: " << err << std::endl;
 				}
 				break;
 			case 3:

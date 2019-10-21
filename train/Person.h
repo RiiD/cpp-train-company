@@ -27,7 +27,7 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Person* person);
 
-	bool operator == (const Person& person);
+	bool operator == (const Person& person) const;
 };
 
 #endif

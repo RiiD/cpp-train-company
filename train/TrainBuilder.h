@@ -33,8 +33,7 @@ public:
 
 	void operator = (const TrainBuilder& other);
 
-	TrainBuilder& addDriver(Driver& driver);
-	TrainBuilder& addConductor(Conductor& conductor);
+	TrainBuilder& addCrew(Person* crew);
 
 	TrainBuilder& addCarriage(Carriage::Type type);
 	TrainBuilder& setPlatform(Platform* platform);

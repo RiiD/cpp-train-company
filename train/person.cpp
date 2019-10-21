@@ -26,7 +26,7 @@ void Person::set_name(string newName)
 	name = newName;
 }
 
-bool Person::operator==(const Person& person)
+bool Person::operator==(const Person& person) const
 {
 	return get_name() == person.get_name();
 }

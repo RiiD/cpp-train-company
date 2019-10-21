@@ -119,7 +119,7 @@ void Train::remove_crew_member(const Person& person)
 	for (auto it = crew_members.begin(), end = crew_members.end(); it != end; ++it)
 	{
 		auto p = *it;
-		if (p->get_name() == person.get_name())
+		if (*p == person)
 		{
 			crew_members.erase(it);
 			delete p;
@@ -141,7 +141,7 @@ void Train::remove_passanger(const Passanger& passanger)
 	for (auto it = passangers.begin(), end = passangers.end(); it != end; ++it)
 	{
 		Passanger* p = *it;
-		if (p->get_name() == passanger.get_name())
+		if (passanger == *p)
 		{
 			passangers.erase(it);
 			delete p;
@@ -168,7 +168,7 @@ bool Train::has_passangers_onboard() const
 
 bool Train:: is_passanger_onboard(const Passanger& passenger) const
 {
-	return any_of(passangers.begin(), passangers.end(), [&](Passanger* c) { return c->get_name() == passenger.get_name(); });
+	return any_of(passangers.begin(), passangers.end(), [&](Passanger* c) { return *c == passenger; });
 }
 
 bool Train::are_there_drivers() const
